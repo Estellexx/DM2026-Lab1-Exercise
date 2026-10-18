@@ -242,5 +242,6 @@ def test_inspect_data_tool():
     assert res["status"] == "success"
     assert res["n_documents"] == 8
     assert res["peek_count"] == 3
-    assert len(res["rows"]) == 3
+    full_report_df = session.results_store[res["result_id"]]["full_report"]
+    assert len(full_report_df) == 3
     assert "text" in res["columns"]

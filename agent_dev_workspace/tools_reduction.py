@@ -66,8 +66,10 @@ def make_tools(session: Any):
         else:
             return {"error": f"Invalid reduction method '{method}'."}
 
+        coords_list = coords.tolist()
+
         # Store reduced coordinates in artifacts
-        session.artifacts[f"reduced_{method}"] = coords.tolist()
+        session.artifacts[f"reduced_{method}"] = coords_list
 
         # Build colored scatter plot and assign to session.pending_figure
         fig, ax = plt.subplots(figsize=(7, 5))
@@ -100,7 +102,8 @@ def make_tools(session: Any):
             "result_id": result_id,
             "method": method,
             "n_components": n_components,
-            "coordinates": coords.tolist(),
+            "n_samples": n_samples,
+            "coordinates": coords_list,
             "status": "success",
         }
         if explained_variance_ratio is not None:
@@ -118,6 +121,7 @@ def make_tools(session: Any):
                 "n_neighbors": n_neighbors,
             },
             summary,
+            full_report={"coordinates": coords_list},
         )
         return summary
 
@@ -159,7 +163,6 @@ def make_tools(session: Any):
             "n_documents": len(df),
             "classes": class_names,
             "n_classes": len(class_names),
-            "one_hot_matrix": matrix,
             "status": "success",
         }
 
@@ -167,6 +170,7 @@ def make_tools(session: Any):
             "binarize_labels_tool",
             {"category_column": category_column},
             summary,
+            full_report={"one_hot_matrix": matrix},
         )
         return summary
 

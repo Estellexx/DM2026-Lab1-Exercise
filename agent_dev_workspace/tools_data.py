@@ -221,7 +221,7 @@ def make_tools(session: Any):
             random_state: Seed for reproducible random sampling (optional).
 
         Returns:
-            A summary dictionary containing sampled indices, sample size, and sample rows.
+            A summary dictionary containing sample statistics and indices.
         """
         if session.dataframe is None:
             return {"error": "No dataframe loaded in session. Load a dataset first."}
@@ -239,14 +239,15 @@ def make_tools(session: Any):
             "result_id": result_id,
             "sample_size": len(sampled_df),
             "sampled_indices": sampled_indices,
-            "sample_records": sampled_df.to_dict(orient="records"),
             "status": "success",
         }
 
+        # Store the actual full records in full_report rather than in summary to avoid context/token overflow
         session.store_result(
             "sample_data_tool",
             {"n": n, "frac": frac, "random_state": random_state},
             summary,
+            full_report=sampled_df,
         )
         return summary
 
@@ -337,11 +338,15 @@ def make_tools(session: Any):
             "columns": df.columns.tolist(),
             "peek_mode": "head" if head else "tail",
             "peek_count": len(peek_df),
-            "rows": peek_df.to_dict(orient="records"),
             "status": "success",
         }
 
-        session.store_result("inspect_data_tool", {"n": n, "head": head}, summary)
+        session.store_result(
+            "inspect_data_tool",
+            {"n": n, "head": head},
+            summary,
+            full_report=peek_df,
+        )
         return summary
 
     return [

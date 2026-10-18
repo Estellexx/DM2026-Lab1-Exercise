@@ -81,7 +81,7 @@ def make_tools(session: Any):
             "result_id": result_id,
             "n_documents": n_rows,
             "n_terms": n_cols,
-            "vocabulary": feature_names,
+            "vocabulary_sample": feature_names[:20],
             "non_zero": non_zero,
             "total_elements": total_elements,
             "sparsity_pct": round(sparsity_pct, 4),
@@ -98,6 +98,7 @@ def make_tools(session: Any):
                 "max_df": max_df,
             },
             summary,
+            full_report={"vocabulary": feature_names},
         )
         return summary
 
@@ -130,21 +131,23 @@ def make_tools(session: Any):
             sorted(term_freq_map.items(), key=lambda item: item[1], reverse=True)
         )
 
-        if top_n is not None and top_n > 0:
-            displayed_frequencies = dict(list(sorted_frequencies.items())[:top_n])
-        else:
-            displayed_frequencies = sorted_frequencies
+        limit = top_n if (top_n is not None and top_n > 0) else 20
+        displayed_frequencies = dict(list(sorted_frequencies.items())[:limit])
 
         result_id = session.next_result_id("term_frequency")
         summary = {
             "result_id": result_id,
             "n_terms": len(feature_names),
             "term_frequencies": displayed_frequencies,
-            "raw_frequencies": term_freq_map,
             "status": "success",
         }
 
-        session.store_result("term_frequency_tool", {"top_n": top_n}, summary)
+        session.store_result(
+            "term_frequency_tool",
+            {"top_n": top_n},
+            summary,
+            full_report=term_freq_map,
+        )
         return summary
 
     @tool

@@ -201,7 +201,7 @@ def make_tools(session: Any):
             "filtering_method": filtering_method,
             "algorithm": algorithm,
             "pattern_count": len(patterns),
-            "patterns": patterns,
+            "patterns": patterns[:10],
             "status": "success",
         }
 
@@ -215,6 +215,7 @@ def make_tools(session: Any):
                 "k": k,
             },
             summary,
+            full_report={"patterns": patterns},
         )
         return summary
 

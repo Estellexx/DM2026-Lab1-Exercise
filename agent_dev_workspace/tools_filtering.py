@@ -19,7 +19,7 @@ def make_tools(session: Any):
             threshold: Variance cutoff threshold (default: 0.0). Terms with variance below this are filtered out.
 
         Returns:
-            A summary dictionary detailing kept/removed terms and variance statistics.
+            A summary dictionary detailing kept/removed term counts and variance statistics.
         """
         if session.feature_matrix is None or session.feature_names is None:
             return {"error": "No DTM feature matrix found. Run build_dtm_tool first."}
@@ -47,8 +47,7 @@ def make_tools(session: Any):
             "total_terms": len(feature_names),
             "kept_terms_count": len(kept_terms),
             "removed_terms_count": len(removed_terms),
-            "kept_terms": kept_terms,
-            "removed_terms": removed_terms,
+            "kept_terms_sample": kept_terms[:20],
             "status": "success",
         }
 
@@ -72,7 +71,7 @@ def make_tools(session: Any):
             threshold: Correlation magnitude cutoff threshold (default: 0.0).
 
         Returns:
-            A summary dictionary detailing term correlation scores and filtered terms.
+            A summary dictionary detailing term correlation score counts and filtered terms.
         """
         if session.feature_matrix is None or session.feature_names is None:
             return {"error": "No DTM feature matrix found. Run build_dtm_tool first."}
@@ -120,8 +119,7 @@ def make_tools(session: Any):
             "total_terms": len(feature_names),
             "kept_terms_count": len(kept_terms),
             "removed_terms_count": len(removed_terms),
-            "kept_terms": kept_terms,
-            "removed_terms": removed_terms,
+            "kept_terms_sample": kept_terms[:20],
             "status": "success",
         }
 
@@ -145,7 +143,7 @@ def make_tools(session: Any):
             threshold: Correlation magnitude cutoff threshold (default: 0.0).
 
         Returns:
-            A summary dictionary detailing term Spearman correlation scores and filtered terms.
+            A summary dictionary detailing term Spearman correlation score counts and filtered terms.
         """
         if session.feature_matrix is None or session.feature_names is None:
             return {"error": "No DTM feature matrix found. Run build_dtm_tool first."}
@@ -193,8 +191,7 @@ def make_tools(session: Any):
             "total_terms": len(feature_names),
             "kept_terms_count": len(kept_terms),
             "removed_terms_count": len(removed_terms),
-            "kept_terms": kept_terms,
-            "removed_terms": removed_terms,
+            "kept_terms_sample": kept_terms[:20],
             "status": "success",
         }
 
