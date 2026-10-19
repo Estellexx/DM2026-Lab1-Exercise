@@ -41,8 +41,16 @@ def test_variance_filter_tool():
     assert res["total_terms"] == 5
     assert res["kept_terms_count"] == 4
     assert res["removed_terms_count"] == 1
-    assert res["kept_terms"] == ["alpha", "gamma", "delta", "beta"]
-    assert res["removed_terms"] == ["always"]
+
+    # Check top_terms structure and values
+    assert "top_terms" in res
+    assert len(res["top_terms"]) == 5
+    top_features = [t["feature"] for t in res["top_terms"]]
+    assert top_features == ["alpha", "gamma", "delta", "beta", "always"]
+
+    # Check keep flags for top_terms
+    keep_flags = [t["keep"] for t in res["top_terms"]]
+    assert keep_flags == [True, True, True, True, False]
 
     # Verify stored full_report in session.results_store
     stored_result = session.results_store[res["result_id"]]
